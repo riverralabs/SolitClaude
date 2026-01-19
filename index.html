@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Perfect Solitaire</title>
+    <title>Perfect Solitaire - Vintage Edition</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cinzel:wght@400;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -15,10 +17,38 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1a472a 0%, #0d2818 50%, #1a472a 100%);
+            background:
+                radial-gradient(ellipse at center, #1a3d1a 0%, #0d260d 50%, #081408 100%);
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Cinzel', 'Times New Roman', serif;
             overflow: hidden;
+        }
+
+        /* Felt texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,0,0,0.03) 2px,
+                    rgba(0,0,0,0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,0,0,0.03) 2px,
+                    rgba(0,0,0,0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
         }
 
         #gameContainer {
@@ -32,82 +62,118 @@
             touch-action: none;
         }
 
-        /* Glassmorphism Controls */
+        /* Vintage Controls */
         .controls {
             position: fixed;
             top: 10px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 10px;
+            gap: 8px;
             z-index: 100;
             flex-wrap: wrap;
             justify-content: center;
-            padding: 10px;
+            padding: 12px 20px;
+            background: linear-gradient(180deg, #3d2817 0%, #2a1a0f 50%, #1f140a 100%);
+            border: 3px solid #5c3d2e;
+            border-radius: 8px;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                inset 0 -1px 0 rgba(0,0,0,0.3),
+                0 4px 15px rgba(0,0,0,0.5),
+                0 0 0 1px rgba(0,0,0,0.3);
         }
 
-        .glass-btn {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 10px 20px;
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
+        .vintage-btn {
+            background: linear-gradient(180deg, #8b6914 0%, #6b4f0f 50%, #4a370a 100%);
+            border: 2px solid #a67c00;
+            border-radius: 4px;
+            padding: 8px 16px;
+            color: #f5e6c8;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'Cinzel', serif;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.15s ease;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.2),
+                inset 0 -1px 0 rgba(0,0,0,0.3),
+                0 2px 4px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .glass-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        .vintage-btn:hover {
+            background: linear-gradient(180deg, #a67c00 0%, #8b6914 50%, #6b4f0f 100%);
+            border-color: #d4a843;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.3),
+                inset 0 -1px 0 rgba(0,0,0,0.3),
+                0 3px 8px rgba(0,0,0,0.4),
+                0 0 10px rgba(212, 168, 67, 0.3);
         }
 
-        .glass-btn:active {
-            transform: translateY(0);
+        .vintage-btn:active {
+            transform: translateY(1px);
+            box-shadow:
+                inset 0 1px 3px rgba(0,0,0,0.3),
+                0 1px 2px rgba(0,0,0,0.3);
         }
 
-        .glass-btn.active {
-            background: rgba(255, 215, 0, 0.3);
-            border-color: rgba(255, 215, 0, 0.5);
+        .vintage-btn.active {
+            background: linear-gradient(180deg, #d4a843 0%, #a67c00 50%, #8b6914 100%);
+            border-color: #f5d17a;
+            color: #1a0f00;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        .vintage-btn.hint-btn {
+            background: linear-gradient(180deg, #2d5a3d 0%, #1e4028 50%, #142d1a 100%);
+            border-color: #4a8b5c;
+        }
+
+        .vintage-btn.hint-btn:hover {
+            background: linear-gradient(180deg, #3d7a52 0%, #2d5a3d 50%, #1e4028 100%);
+            border-color: #6bab7c;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.3),
+                inset 0 -1px 0 rgba(0,0,0,0.3),
+                0 3px 8px rgba(0,0,0,0.4),
+                0 0 10px rgba(107, 171, 124, 0.3);
         }
 
         .score-display {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 10px 20px;
-            color: #ffd700;
-            font-size: 16px;
+            background: linear-gradient(180deg, #1a0f05 0%, #0d0805 100%);
+            border: 2px solid #5c3d2e;
+            border-radius: 4px;
+            padding: 8px 16px;
+            color: #d4a843;
+            font-size: 14px;
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 0 10px rgba(212, 168, 67, 0.5);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
         }
 
         .suit-selector {
             display: flex;
-            gap: 5px;
+            gap: 4px;
         }
 
         .suit-btn {
-            padding: 10px 15px;
-            min-width: 45px;
+            padding: 8px 12px;
+            min-width: 40px;
         }
 
-        /* Win Screen */
+        /* Win Screen - Vintage Style */
         #winScreen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: radial-gradient(ellipse at center, rgba(26, 15, 5, 0.95) 0%, rgba(0,0,0,0.98) 100%);
             display: none;
             justify-content: center;
             align-items: center;
@@ -116,57 +182,76 @@
         }
 
         .trophy {
-            font-size: 120px;
-            animation: bounce 1s ease infinite;
-            text-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+            font-size: 100px;
+            animation: float 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px rgba(212, 168, 67, 0.8));
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
         }
 
         .win-text {
-            color: #ffd700;
-            font-size: 48px;
+            color: #d4a843;
+            font-size: 42px;
             font-weight: bold;
+            font-family: 'Playfair Display', serif;
             margin-top: 20px;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
-            animation: pulse 1.5s ease infinite;
+            text-shadow:
+                0 0 20px rgba(212, 168, 67, 0.8),
+                0 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 4px;
+            animation: glow 2s ease-in-out infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(212, 168, 67, 0.8), 0 2px 4px rgba(0,0,0,0.5); }
+            50% { text-shadow: 0 0 40px rgba(212, 168, 67, 1), 0 0 60px rgba(212, 168, 67, 0.5), 0 2px 4px rgba(0,0,0,0.5); }
         }
 
         .win-score {
-            color: white;
-            font-size: 24px;
-            margin-top: 10px;
+            color: #f5e6c8;
+            font-size: 22px;
+            margin-top: 15px;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
         }
 
         .win-btn {
             margin-top: 30px;
-            padding: 15px 40px;
-            font-size: 18px;
+            padding: 12px 35px;
+            font-size: 16px;
+        }
+
+        /* Hint highlight overlay */
+        .hint-pulse {
+            animation: hintPulse 0.8s ease-in-out infinite;
+        }
+
+        @keyframes hintPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
 
         /* Responsive */
         @media (max-width: 600px) {
-            .glass-btn {
-                padding: 8px 12px;
-                font-size: 12px;
+            .vintage-btn {
+                padding: 6px 10px;
+                font-size: 11px;
             }
             .score-display {
-                font-size: 14px;
-                padding: 8px 12px;
+                font-size: 12px;
+                padding: 6px 10px;
             }
             .trophy {
-                font-size: 80px;
+                font-size: 70px;
             }
             .win-text {
-                font-size: 32px;
+                font-size: 28px;
+            }
+            .controls {
+                padding: 8px 12px;
             }
         }
     </style>
@@ -176,22 +261,23 @@
         <canvas id="gameCanvas"></canvas>
 
         <div class="controls">
-            <button class="glass-btn" id="newGameBtn">New Game</button>
-            <button class="glass-btn" id="drawBtn">Draw</button>
-            <button class="glass-btn" id="undoBtn">Undo</button>
+            <button class="vintage-btn" id="newGameBtn">New Game</button>
+            <button class="vintage-btn" id="drawBtn">Draw</button>
+            <button class="vintage-btn" id="undoBtn">Undo</button>
+            <button class="vintage-btn hint-btn" id="hintBtn">Hint</button>
             <div class="suit-selector">
-                <button class="glass-btn suit-btn" data-suits="1">1</button>
-                <button class="glass-btn suit-btn" data-suits="2">2</button>
-                <button class="glass-btn suit-btn active" data-suits="4">4</button>
+                <button class="vintage-btn suit-btn" data-suits="1">1</button>
+                <button class="vintage-btn suit-btn" data-suits="2">2</button>
+                <button class="vintage-btn suit-btn active" data-suits="4">4</button>
             </div>
             <div class="score-display">Score: <span id="scoreValue">0</span></div>
         </div>
 
         <div id="winScreen">
-            <div class="trophy">🏆</div>
-            <div class="win-text">YOU WIN!</div>
+            <div class="trophy">&#127942;</div>
+            <div class="win-text">VICTORY!</div>
             <div class="win-score">Final Score: <span id="finalScore">0</span></div>
-            <button class="glass-btn win-btn" id="playAgainBtn">Play Again</button>
+            <button class="vintage-btn win-btn" id="playAgainBtn">Play Again</button>
         </div>
     </div>
 
@@ -200,56 +286,62 @@
         const CONFIG = {
             CARD_WIDTH: 70,
             CARD_HEIGHT: 100,
-            CARD_RADIUS: 8,
+            CARD_RADIUS: 6,
             COLUMN_SPACING: 10,
             ROW_OFFSET: 25,
             STOCK_OFFSET: 3,
-            MAX_PARTICLES: 500,
-            GRAVITY: 0.5,
-            FRICTION: 0.95,
-            LERP_SPEED: 0.15,
+            MAX_PARTICLES: 200,
+            GRAVITY: 0.4,
+            FRICTION: 0.92,
+            LERP_SPEED: 0.25,
             MAX_UNDO: 5,
             SUITS: ['♠', '♥', '♦', '♣'],
-            SUIT_COLORS: { '♠': '#1a1a2e', '♥': '#c41e3a', '♦': '#c41e3a', '♣': '#1a1a2e' },
+            SUIT_COLORS: { '♠': '#1a1a2e', '♥': '#8b1a1a', '♦': '#8b1a1a', '♣': '#1a1a2e' },
             RANKS: ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'],
             RANK_VALUES: { 'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 11, 'Q': 12, 'K': 13 }
         };
 
-        // ============== PARTICLE SYSTEM ==============
+        // ============== PARTICLE SYSTEM (Optimized) ==============
         class Particle {
             constructor(x, y, type) {
                 this.x = x;
                 this.y = y;
                 this.type = type;
                 this.life = 1;
-                this.decay = 0.02 + Math.random() * 0.02;
+                this.decay = 0.03 + Math.random() * 0.02;
 
                 if (type === 'trail') {
-                    this.vx = (Math.random() - 0.5) * 2;
-                    this.vy = (Math.random() - 0.5) * 2;
-                    this.size = 3 + Math.random() * 3;
-                    this.color = `hsla(${200 + Math.random() * 40}, 80%, 60%, `;
+                    this.vx = (Math.random() - 0.5) * 1.5;
+                    this.vy = (Math.random() - 0.5) * 1.5;
+                    this.size = 2 + Math.random() * 2;
+                    this.color = `hsla(45, 80%, 50%, `;
                 } else if (type === 'spark') {
-                    this.vx = (Math.random() - 0.5) * 8;
-                    this.vy = -Math.random() * 10 - 5;
-                    this.size = 2 + Math.random() * 4;
-                    this.color = `hsla(${45 + Math.random() * 15}, 100%, 50%, `;
+                    this.vx = (Math.random() - 0.5) * 6;
+                    this.vy = -Math.random() * 8 - 4;
+                    this.size = 2 + Math.random() * 3;
+                    this.color = `hsla(${40 + Math.random() * 20}, 100%, 55%, `;
                 } else if (type === 'confetti') {
-                    this.vx = (Math.random() - 0.5) * 10;
-                    this.vy = -Math.random() * 15 - 5;
-                    this.size = 5 + Math.random() * 5;
+                    this.vx = (Math.random() - 0.5) * 8;
+                    this.vy = -Math.random() * 12 - 4;
+                    this.size = 4 + Math.random() * 4;
                     this.rotation = Math.random() * Math.PI * 2;
-                    this.rotationSpeed = (Math.random() - 0.5) * 0.3;
-                    this.color = `hsla(${Math.random() * 360}, 100%, 60%, `;
-                    this.decay = 0.005 + Math.random() * 0.005;
+                    this.rotationSpeed = (Math.random() - 0.5) * 0.2;
+                    this.color = `hsla(${Math.random() * 60 + 20}, 90%, 55%, `;
+                    this.decay = 0.008 + Math.random() * 0.005;
+                } else if (type === 'hint') {
+                    this.vx = (Math.random() - 0.5) * 2;
+                    this.vy = -Math.random() * 2 - 1;
+                    this.size = 3 + Math.random() * 2;
+                    this.color = `hsla(120, 80%, 60%, `;
+                    this.decay = 0.04;
                 }
             }
 
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                this.vy += CONFIG.GRAVITY * 0.3;
-                this.vx *= 0.99;
+                this.vy += CONFIG.GRAVITY * 0.25;
+                this.vx *= 0.98;
                 this.life -= this.decay;
                 if (this.type === 'confetti') {
                     this.rotation += this.rotationSpeed;
@@ -278,6 +370,7 @@
         class ParticleSystem {
             constructor() {
                 this.particles = [];
+                this.lastEmit = 0;
             }
 
             emit(x, y, type, count = 1) {
@@ -285,6 +378,15 @@
                     if (this.particles.length < CONFIG.MAX_PARTICLES) {
                         this.particles.push(new Particle(x, y, type));
                     }
+                }
+            }
+
+            // Throttled emit for drag trails
+            emitThrottled(x, y, type, count = 1, throttleMs = 50) {
+                const now = performance.now();
+                if (now - this.lastEmit > throttleMs) {
+                    this.emit(x, y, type, count);
+                    this.lastEmit = now;
                 }
             }
 
@@ -318,6 +420,8 @@
                 this.height = CONFIG.CARD_HEIGHT;
                 this.dragging = false;
                 this.hovered = false;
+                this.highlighted = false;
+                this.highlightColor = null;
                 this.zIndex = 0;
             }
 
@@ -327,112 +431,157 @@
 
             update() {
                 if (!this.dragging) {
-                    // Verlet integration with lerp smoothing
-                    this.vx += (this.targetX - this.x) * CONFIG.LERP_SPEED;
-                    this.vy += (this.targetY - this.y) * CONFIG.LERP_SPEED;
-                    this.vx *= CONFIG.FRICTION;
-                    this.vy *= CONFIG.FRICTION;
+                    const dx = this.targetX - this.x;
+                    const dy = this.targetY - this.y;
+
+                    // Smoother lerp with velocity damping
+                    this.vx = dx * CONFIG.LERP_SPEED;
+                    this.vy = dy * CONFIG.LERP_SPEED;
+
                     this.x += this.vx;
                     this.y += this.vy;
+
+                    // Snap when very close
+                    if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) {
+                        this.x = this.targetX;
+                        this.y = this.targetY;
+                        this.vx = 0;
+                        this.vy = 0;
+                    }
                 }
             }
 
             draw(ctx) {
                 ctx.save();
 
-                // Shadow
-                ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
-                ctx.shadowBlur = this.dragging ? 20 : 10;
-                ctx.shadowOffsetX = this.dragging ? 8 : 3;
-                ctx.shadowOffsetY = this.dragging ? 8 : 3;
+                // Shadow - reduced for better performance
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+                ctx.shadowBlur = this.dragging ? 15 : 8;
+                ctx.shadowOffsetX = this.dragging ? 6 : 2;
+                ctx.shadowOffsetY = this.dragging ? 6 : 2;
 
                 // Card body
                 ctx.beginPath();
                 this.roundRect(ctx, this.x, this.y, this.width, this.height, CONFIG.CARD_RADIUS);
 
                 if (this.faceUp) {
-                    // White card face
+                    // Vintage cream card face
                     const gradient = ctx.createLinearGradient(this.x, this.y, this.x + this.width, this.y + this.height);
-                    gradient.addColorStop(0, '#ffffff');
-                    gradient.addColorStop(1, '#f0f0f0');
+                    gradient.addColorStop(0, '#faf6e9');
+                    gradient.addColorStop(0.5, '#f5edd6');
+                    gradient.addColorStop(1, '#ebe3c8');
                     ctx.fillStyle = gradient;
                     ctx.fill();
 
-                    // Hover glow
-                    if (this.hovered && !this.dragging) {
-                        ctx.shadowColor = 'rgba(255, 215, 0, 0.6)';
-                        ctx.shadowBlur = 15;
-                        ctx.strokeStyle = 'rgba(255, 215, 0, 0.8)';
+                    // Highlight effect for hints
+                    if (this.highlighted) {
+                        ctx.shadowColor = this.highlightColor || 'rgba(76, 175, 80, 0.8)';
+                        ctx.shadowBlur = 20;
+                        ctx.strokeStyle = this.highlightColor || '#4CAF50';
+                        ctx.lineWidth = 3;
+                        ctx.stroke();
+                    }
+                    // Hover glow - vintage gold
+                    else if (this.hovered && !this.dragging) {
+                        ctx.shadowColor = 'rgba(212, 168, 67, 0.6)';
+                        ctx.shadowBlur = 12;
+                        ctx.strokeStyle = 'rgba(212, 168, 67, 0.8)';
                         ctx.lineWidth = 2;
                         ctx.stroke();
                     }
 
                     ctx.shadowColor = 'transparent';
 
-                    // Border
-                    ctx.strokeStyle = '#ccc';
+                    // Vintage border
+                    ctx.strokeStyle = '#c4b896';
                     ctx.lineWidth = 1;
                     ctx.stroke();
 
-                    // Draw suit and rank
-                    ctx.fillStyle = this.color;
-                    ctx.font = 'bold 16px Arial';
-                    ctx.textAlign = 'left';
-                    ctx.fillText(this.rank, this.x + 5, this.y + 18);
-                    ctx.fillText(this.suit, this.x + 5, this.y + 35);
+                    // Inner border for vintage feel
+                    ctx.strokeStyle = 'rgba(139, 105, 20, 0.3)';
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath();
+                    this.roundRect(ctx, this.x + 3, this.y + 3, this.width - 6, this.height - 6, CONFIG.CARD_RADIUS - 2);
+                    ctx.stroke();
 
-                    // Center suit
-                    ctx.font = 'bold 32px Arial';
+                    // Draw suit and rank - vintage style
+                    ctx.fillStyle = this.color;
+                    ctx.font = 'bold 15px "Playfair Display", Georgia, serif';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(this.rank, this.x + 5, this.y + 17);
+                    ctx.font = '14px serif';
+                    ctx.fillText(this.suit, this.x + 5, this.y + 32);
+
+                    // Center suit - larger
+                    ctx.font = 'bold 30px serif';
                     ctx.textAlign = 'center';
                     ctx.fillText(this.suit, this.x + this.width/2, this.y + this.height/2 + 10);
 
                     // Bottom right (inverted)
-                    ctx.font = 'bold 16px Arial';
+                    ctx.font = 'bold 15px "Playfair Display", Georgia, serif';
                     ctx.textAlign = 'right';
                     ctx.fillText(this.rank, this.x + this.width - 5, this.y + this.height - 8);
-                    ctx.fillText(this.suit, this.x + this.width - 5, this.y + this.height - 23);
+                    ctx.font = '14px serif';
+                    ctx.fillText(this.suit, this.x + this.width - 5, this.y + this.height - 22);
                 } else {
-                    // Card back with pattern
+                    // Vintage card back - rich burgundy/maroon
                     const backGradient = ctx.createLinearGradient(this.x, this.y, this.x + this.width, this.y + this.height);
-                    backGradient.addColorStop(0, '#1e3a5f');
-                    backGradient.addColorStop(0.5, '#2d5a87');
-                    backGradient.addColorStop(1, '#1e3a5f');
+                    backGradient.addColorStop(0, '#5c1a1a');
+                    backGradient.addColorStop(0.3, '#7a2828');
+                    backGradient.addColorStop(0.5, '#8b3030');
+                    backGradient.addColorStop(0.7, '#7a2828');
+                    backGradient.addColorStop(1, '#5c1a1a');
                     ctx.fillStyle = backGradient;
                     ctx.fill();
 
-                    ctx.strokeStyle = '#0f2540';
+                    ctx.strokeStyle = '#3d1010';
                     ctx.lineWidth = 2;
                     ctx.stroke();
 
                     ctx.shadowColor = 'transparent';
 
-                    // Pattern
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                    // Ornate border pattern
+                    ctx.strokeStyle = 'rgba(212, 168, 67, 0.4)';
                     ctx.lineWidth = 1;
-                    const padding = 8;
-                    for (let i = 0; i < 6; i++) {
-                        const offset = i * 8;
-                        ctx.beginPath();
-                        ctx.moveTo(this.x + padding + offset, this.y + padding);
-                        ctx.lineTo(this.x + padding, this.y + padding + offset);
-                        ctx.stroke();
-                        ctx.beginPath();
-                        ctx.moveTo(this.x + this.width - padding - offset, this.y + this.height - padding);
-                        ctx.lineTo(this.x + this.width - padding, this.y + this.height - padding - offset);
-                        ctx.stroke();
-                    }
-
-                    // Center diamond
-                    ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
+                    const padding = 6;
                     ctx.beginPath();
+                    this.roundRect(ctx, this.x + padding, this.y + padding,
+                                   this.width - padding * 2, this.height - padding * 2, 3);
+                    ctx.stroke();
+
+                    // Inner decorative pattern
+                    ctx.strokeStyle = 'rgba(212, 168, 67, 0.25)';
+                    ctx.beginPath();
+                    this.roundRect(ctx, this.x + padding + 4, this.y + padding + 4,
+                                   this.width - padding * 2 - 8, this.height - padding * 2 - 8, 2);
+                    ctx.stroke();
+
+                    // Center ornament - diamond pattern
+                    ctx.fillStyle = 'rgba(212, 168, 67, 0.35)';
                     const cx = this.x + this.width/2;
                     const cy = this.y + this.height/2;
-                    ctx.moveTo(cx, cy - 15);
-                    ctx.lineTo(cx + 10, cy);
-                    ctx.lineTo(cx, cy + 15);
-                    ctx.lineTo(cx - 10, cy);
+
+                    // Large diamond
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy - 18);
+                    ctx.lineTo(cx + 12, cy);
+                    ctx.lineTo(cx, cy + 18);
+                    ctx.lineTo(cx - 12, cy);
                     ctx.closePath();
                     ctx.fill();
+
+                    // Small diamonds around
+                    ctx.fillStyle = 'rgba(212, 168, 67, 0.25)';
+                    const smallSize = 6;
+                    [[0, -28], [0, 28], [-20, 0], [20, 0]].forEach(([ox, oy]) => {
+                        ctx.beginPath();
+                        ctx.moveTo(cx + ox, cy + oy - smallSize);
+                        ctx.lineTo(cx + ox + smallSize/1.5, cy + oy);
+                        ctx.lineTo(cx + ox, cy + oy + smallSize);
+                        ctx.lineTo(cx + ox - smallSize/1.5, cy + oy);
+                        ctx.closePath();
+                        ctx.fill();
+                    });
                 }
 
                 ctx.restore();
@@ -491,8 +640,11 @@
 
                 this.lastMouseX = 0;
                 this.lastMouseY = 0;
-                this.mouseVX = 0;
-                this.mouseVY = 0;
+                this.isDragging = false;
+
+                // Hint system
+                this.currentHint = null;
+                this.hintTimeout = null;
 
                 this.setupCanvas();
                 this.setupEventListeners();
@@ -525,18 +677,19 @@
                 this.stockX = this.startX;
                 this.stockY = this.canvas.height - this.cardHeight - 20;
 
-                // Update all card positions
                 this.updateCardPositions();
             }
 
             setupEventListeners() {
-                // Mouse events
+                // Mouse events - optimized
                 this.canvas.addEventListener('mousedown', (e) => this.handlePointerDown(e.clientX, e.clientY));
                 this.canvas.addEventListener('mousemove', (e) => this.handlePointerMove(e.clientX, e.clientY));
                 this.canvas.addEventListener('mouseup', (e) => this.handlePointerUp(e.clientX, e.clientY));
-                this.canvas.addEventListener('mouseleave', () => this.handlePointerUp(0, 0));
+                this.canvas.addEventListener('mouseleave', () => {
+                    if (this.isDragging) this.handlePointerUp(this.lastMouseX, this.lastMouseY);
+                });
 
-                // Touch events
+                // Touch events - optimized
                 this.canvas.addEventListener('touchstart', (e) => {
                     e.preventDefault();
                     const touch = e.touches[0];
@@ -558,6 +711,7 @@
                 document.getElementById('newGameBtn').addEventListener('click', () => this.newGame());
                 document.getElementById('drawBtn').addEventListener('click', () => this.drawFromStock());
                 document.getElementById('undoBtn').addEventListener('click', () => this.undo());
+                document.getElementById('hintBtn').addEventListener('click', () => this.showHint());
                 document.getElementById('playAgainBtn').addEventListener('click', () => {
                     document.getElementById('winScreen').style.display = 'none';
                     this.newGame();
@@ -590,7 +744,6 @@
                     }
                 }
 
-                // Shuffle to exactly 104 cards
                 while (deck.length > 104) deck.pop();
                 while (deck.length < 104) {
                     const suit = suitsToUse[Math.floor(Math.random() * suitsToUse.length)];
@@ -613,12 +766,12 @@
                 this.undoStack = [];
                 this.completed = [];
                 this.draggedCards = [];
+                this.clearHint();
                 this.updateScore();
 
                 const deck = this.createDeck();
                 this.columns = [];
 
-                // 10 columns: 4 with 6 cards, 6 with 5 cards
                 let cardIndex = 0;
                 for (let col = 0; col < 10; col++) {
                     const columnCards = [];
@@ -632,7 +785,6 @@
                     this.columns.push(columnCards);
                 }
 
-                // Remaining 50 cards go to stock (104 - 54 = 50)
                 this.stock = deck.slice(cardIndex);
                 this.stock.forEach(card => card.faceUp = false);
 
@@ -641,7 +793,6 @@
             }
 
             updateCardPositions() {
-                // Update column cards
                 for (let col = 0; col < this.columns.length; col++) {
                     const column = this.columns[col];
                     for (let row = 0; row < column.length; row++) {
@@ -657,7 +808,6 @@
                     }
                 }
 
-                // Update stock
                 for (let i = 0; i < this.stock.length; i++) {
                     const card = this.stock[i];
                     card.setTarget(this.stockX + Math.min(i, 5) * CONFIG.STOCK_OFFSET, this.stockY);
@@ -668,6 +818,8 @@
             }
 
             handlePointerDown(x, y) {
+                this.clearHint();
+
                 // Check stock click
                 if (this.stock.length > 0) {
                     const topStock = this.stock[this.stock.length - 1];
@@ -683,7 +835,6 @@
                     for (let row = column.length - 1; row >= 0; row--) {
                         const card = column[row];
                         if (card.faceUp && card.contains(x, y)) {
-                            // Check if we can drag this stack
                             if (this.canDragStack(col, row)) {
                                 this.startDrag(col, row, x, y);
                                 return;
@@ -695,7 +846,6 @@
 
             canDragStack(col, startRow) {
                 const column = this.columns[col];
-                // Check if cards form a descending sequence
                 for (let i = startRow; i < column.length - 1; i++) {
                     if (!column[i].faceUp || column[i].value !== column[i + 1].value + 1) {
                         return false;
@@ -705,6 +855,7 @@
             }
 
             startDrag(col, row, x, y) {
+                this.isDragging = true;
                 this.dragStartColumn = col;
                 this.dragStartIndex = row;
 
@@ -722,25 +873,20 @@
             }
 
             handlePointerMove(x, y) {
-                // Track velocity
-                this.mouseVX = x - this.lastMouseX;
-                this.mouseVY = y - this.lastMouseY;
                 this.lastMouseX = x;
                 this.lastMouseY = y;
 
-                if (this.draggedCards.length > 0) {
-                    // Emit trail particles
-                    if (Math.random() > 0.5) {
-                        this.particles.emit(x, y, 'trail', 1);
-                    }
+                if (this.isDragging && this.draggedCards.length > 0) {
+                    // Emit sparse trail particles - much less frequent
+                    this.particles.emitThrottled(x, y, 'trail', 1, 80);
 
-                    // Update dragged card positions
+                    // Direct position update - no velocity tracking during drag for smoothness
                     this.draggedCards.forEach((card, i) => {
                         card.x = x - this.dragOffsetX;
                         card.y = y - this.dragOffsetY + i * this.rowOffset;
                     });
-                } else {
-                    // Handle hover
+                } else if (!this.isDragging) {
+                    // Handle hover only when not dragging
                     this.hoveredCard = null;
                     for (const column of this.columns) {
                         for (const card of column) {
@@ -755,12 +901,14 @@
             }
 
             handlePointerUp(x, y) {
-                if (this.draggedCards.length === 0) return;
+                if (!this.isDragging || this.draggedCards.length === 0) {
+                    this.isDragging = false;
+                    return;
+                }
 
-                // Apply throw velocity
+                this.isDragging = false;
+
                 this.draggedCards.forEach(card => {
-                    card.vx = this.mouseVX * 0.5;
-                    card.vy = this.mouseVY * 0.5;
                     card.dragging = false;
                 });
 
@@ -782,11 +930,9 @@
                     const targetColumn = this.columns[targetCol];
 
                     if (targetColumn.length === 0) {
-                        // Any card can go to empty column
                         validMove = true;
                     } else {
                         const topCard = targetColumn[targetColumn.length - 1];
-                        // Any-suit descending moves
                         if (topCard.faceUp && topCard.value === firstDragged.value + 1) {
                             validMove = true;
                         }
@@ -794,22 +940,12 @@
                 }
 
                 if (validMove) {
-                    // Save state for undo
                     this.saveState();
-
-                    // Move cards to target
                     this.columns[targetCol].push(...this.draggedCards);
-
-                    // Reveal top card in source column
                     this.revealTopCard(this.dragStartColumn);
-
-                    // Award points
                     this.addScore(this.draggedCards.length * 5);
-
-                    // Check for completed sequence
                     this.checkSequenceComplete(targetCol);
                 } else {
-                    // Return cards to source
                     this.columns[this.dragStartColumn].push(...this.draggedCards);
                 }
 
@@ -830,9 +966,8 @@
                 const column = this.columns[col];
                 if (column.length < 13) return;
 
-                // Check for same-suit K-A sequence
                 const lastIndex = column.length - 1;
-                if (column[lastIndex].value !== 1) return; // Must end with Ace
+                if (column[lastIndex].value !== 1) return;
 
                 const suit = column[lastIndex].suit;
                 let valid = true;
@@ -846,21 +981,18 @@
                 }
 
                 if (valid) {
-                    // Remove sequence
                     const removed = column.splice(column.length - 13);
                     this.completed.push(removed);
 
-                    // Emit gold sparks
                     const centerX = this.startX + col * (this.cardWidth + this.columnSpacing) + this.cardWidth / 2;
                     const centerY = this.startY + (column.length + 6) * this.rowOffset;
-                    for (let i = 0; i < 50; i++) {
+                    for (let i = 0; i < 30; i++) {
                         this.particles.emit(centerX, centerY, 'spark', 1);
                     }
 
                     this.addScore(100);
                     this.revealTopCard(col);
 
-                    // Check win
                     if (this.completed.length === 8) {
                         this.win();
                     }
@@ -868,18 +1000,14 @@
             }
 
             drawFromStock() {
-                // Block if any column is empty
                 const hasEmpty = this.columns.some(col => col.length === 0);
-                if (hasEmpty) {
-                    // Visual feedback - shake empty columns
-                    return;
-                }
+                if (hasEmpty) return;
 
                 if (this.stock.length === 0) return;
 
                 this.saveState();
+                this.clearHint();
 
-                // Deal one card to each column
                 for (let col = 0; col < 10 && this.stock.length > 0; col++) {
                     const card = this.stock.pop();
                     card.faceUp = true;
@@ -888,6 +1016,172 @@
 
                 this.updateCardPositions();
                 this.saveGame();
+            }
+
+            // ============== HINT SYSTEM ==============
+            findHint() {
+                const hints = [];
+
+                // Priority 1: Find moves that complete a sequence
+                for (let srcCol = 0; srcCol < 10; srcCol++) {
+                    const srcColumn = this.columns[srcCol];
+                    if (srcColumn.length === 0) continue;
+
+                    for (let srcRow = 0; srcRow < srcColumn.length; srcRow++) {
+                        const srcCard = srcColumn[srcRow];
+                        if (!srcCard.faceUp) continue;
+                        if (!this.canDragStack(srcCol, srcRow)) continue;
+
+                        const stackSize = srcColumn.length - srcRow;
+
+                        for (let destCol = 0; destCol < 10; destCol++) {
+                            if (destCol === srcCol) continue;
+
+                            const destColumn = this.columns[destCol];
+                            let validMove = false;
+
+                            if (destColumn.length === 0) {
+                                validMove = true;
+                            } else {
+                                const destCard = destColumn[destColumn.length - 1];
+                                if (destCard.faceUp && destCard.value === srcCard.value + 1) {
+                                    validMove = true;
+                                }
+                            }
+
+                            if (validMove) {
+                                // Check if this creates a same-suit sequence
+                                let sameSuitBonus = 0;
+                                if (destColumn.length > 0) {
+                                    const destCard = destColumn[destColumn.length - 1];
+                                    if (destCard.suit === srcCard.suit) {
+                                        sameSuitBonus = 10;
+
+                                        // Check how long the same-suit sequence would be
+                                        let seqLen = 1;
+                                        for (let i = destColumn.length - 2; i >= 0; i--) {
+                                            const c = destColumn[i];
+                                            if (c.faceUp && c.suit === srcCard.suit &&
+                                                c.value === destColumn[i + 1].value + 1) {
+                                                seqLen++;
+                                            } else break;
+                                        }
+                                        sameSuitBonus += seqLen * 2;
+                                    }
+                                }
+
+                                // Check if source reveals a hidden card
+                                let revealsCard = (srcRow > 0 && !srcColumn[srcRow - 1].faceUp) ? 5 : 0;
+
+                                // Prefer moving Kings to empty columns
+                                let kingToEmptyBonus = (srcCard.value === 13 && destColumn.length === 0 && srcRow > 0) ? 8 : 0;
+
+                                // Don't move from empty to empty unnecessarily
+                                if (srcColumn.length === stackSize && destColumn.length === 0) {
+                                    continue;
+                                }
+
+                                hints.push({
+                                    srcCol,
+                                    srcRow,
+                                    destCol,
+                                    priority: sameSuitBonus + revealsCard + kingToEmptyBonus + stackSize,
+                                    description: this.getHintDescription(srcCard, srcCol, destCol, destColumn)
+                                });
+                            }
+                        }
+                    }
+                }
+
+                // Sort by priority (highest first)
+                hints.sort((a, b) => b.priority - a.priority);
+
+                return hints.length > 0 ? hints[0] : null;
+            }
+
+            getHintDescription(card, srcCol, destCol, destColumn) {
+                const cardName = `${card.rank}${card.suit}`;
+                if (destColumn.length === 0) {
+                    return `Move ${cardName} to empty column ${destCol + 1}`;
+                }
+                const destCard = destColumn[destColumn.length - 1];
+                return `Move ${cardName} onto ${destCard.rank}${destCard.suit}`;
+            }
+
+            showHint() {
+                this.clearHint();
+
+                const hint = this.findHint();
+
+                if (!hint) {
+                    // No valid moves - maybe suggest drawing
+                    if (this.stock.length > 0) {
+                        // Flash the stock pile
+                        this.flashStock();
+                    }
+                    return;
+                }
+
+                this.currentHint = hint;
+
+                // Highlight source cards
+                const srcColumn = this.columns[hint.srcCol];
+                for (let i = hint.srcRow; i < srcColumn.length; i++) {
+                    srcColumn[i].highlighted = true;
+                    srcColumn[i].highlightColor = 'rgba(76, 175, 80, 0.9)';
+                }
+
+                // Highlight destination
+                const destColumn = this.columns[hint.destCol];
+                if (destColumn.length > 0) {
+                    const destCard = destColumn[destColumn.length - 1];
+                    destCard.highlighted = true;
+                    destCard.highlightColor = 'rgba(255, 193, 7, 0.9)';
+                }
+
+                // Emit hint particles at source
+                const srcCard = srcColumn[hint.srcRow];
+                for (let i = 0; i < 10; i++) {
+                    this.particles.emit(
+                        srcCard.x + this.cardWidth / 2,
+                        srcCard.y + this.cardHeight / 2,
+                        'hint'
+                    );
+                }
+
+                // Auto-clear hint after 3 seconds
+                this.hintTimeout = setTimeout(() => this.clearHint(), 3000);
+            }
+
+            flashStock() {
+                // Visual feedback that player should draw
+                let flashes = 0;
+                const flashInterval = setInterval(() => {
+                    flashes++;
+                    // The stock will be highlighted in the draw method
+                    this.stockHighlighted = flashes % 2 === 1;
+                    if (flashes >= 6) {
+                        clearInterval(flashInterval);
+                        this.stockHighlighted = false;
+                    }
+                }, 200);
+            }
+
+            clearHint() {
+                if (this.hintTimeout) {
+                    clearTimeout(this.hintTimeout);
+                    this.hintTimeout = null;
+                }
+
+                // Remove all highlights
+                for (const column of this.columns) {
+                    for (const card of column) {
+                        card.highlighted = false;
+                        card.highlightColor = null;
+                    }
+                }
+
+                this.currentHint = null;
             }
 
             saveState() {
@@ -915,6 +1209,7 @@
             undo() {
                 if (this.undoStack.length === 0) return;
 
+                this.clearHint();
                 const state = JSON.parse(this.undoStack.pop());
 
                 this.columns = state.columns.map(col => col.map(data => {
@@ -929,7 +1224,6 @@
                     return card;
                 });
 
-                // Adjust completed sequences
                 while (this.completed.length > state.completed) {
                     this.completed.pop();
                 }
@@ -950,9 +1244,8 @@
             }
 
             win() {
-                // Rainbow confetti!
                 const interval = setInterval(() => {
-                    for (let i = 0; i < 20; i++) {
+                    for (let i = 0; i < 15; i++) {
                         this.particles.emit(
                             Math.random() * this.canvas.width,
                             this.canvas.height + 50,
@@ -1028,30 +1321,42 @@
                 const x = this.stockX;
                 const y = this.stockY;
 
-                // Draw stock pile background
-                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                // Draw stock pile background - vintage style
+                this.ctx.fillStyle = this.stockHighlighted ? 'rgba(76, 175, 80, 0.4)' : 'rgba(0, 0, 0, 0.3)';
                 this.ctx.beginPath();
                 this.roundRect(x, y, this.cardWidth, this.cardHeight, CONFIG.CARD_RADIUS);
                 this.ctx.fill();
 
-                // Draw stock count
-                this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-                this.ctx.font = 'bold 20px Arial';
-                this.ctx.textAlign = 'center';
-                this.ctx.fillText(this.stock.length, x + this.cardWidth / 2, y + this.cardHeight / 2 + 7);
+                if (this.stockHighlighted) {
+                    this.ctx.strokeStyle = '#4CAF50';
+                    this.ctx.lineWidth = 3;
+                    this.ctx.stroke();
+                }
 
-                // Draw completed piles
+                // Draw stock count with vintage styling
+                this.ctx.fillStyle = this.stock.length > 0 ? 'rgba(212, 168, 67, 0.6)' : 'rgba(255, 255, 255, 0.2)';
+                this.ctx.font = 'bold 18px "Playfair Display", serif';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText(this.stock.length, x + this.cardWidth / 2, y + this.cardHeight / 2 + 6);
+
+                // Draw completed piles indicator
                 for (let i = 0; i < this.completed.length; i++) {
                     const px = this.stockX + this.cardWidth + 20 + i * (this.cardWidth * 0.3);
                     const py = this.stockY;
 
-                    this.ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
+                    this.ctx.fillStyle = 'rgba(212, 168, 67, 0.25)';
                     this.ctx.beginPath();
                     this.roundRect(px, py, this.cardWidth, this.cardHeight, CONFIG.CARD_RADIUS);
                     this.ctx.fill();
-                    this.ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+                    this.ctx.strokeStyle = 'rgba(212, 168, 67, 0.5)';
                     this.ctx.lineWidth = 2;
                     this.ctx.stroke();
+
+                    // Draw checkmark
+                    this.ctx.fillStyle = 'rgba(212, 168, 67, 0.7)';
+                    this.ctx.font = '24px serif';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText('✓', px + this.cardWidth / 2, py + this.cardHeight / 2 + 8);
                 }
             }
 
@@ -1071,17 +1376,29 @@
                 // Clear canvas
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                // Draw felt texture
-                this.ctx.fillStyle = '#1a472a';
+                // Draw vintage felt texture
+                const feltGradient = this.ctx.createRadialGradient(
+                    this.canvas.width / 2, this.canvas.height / 2, 0,
+                    this.canvas.width / 2, this.canvas.height / 2, Math.max(this.canvas.width, this.canvas.height) / 1.5
+                );
+                feltGradient.addColorStop(0, '#1a4d1a');
+                feltGradient.addColorStop(0.5, '#134013');
+                feltGradient.addColorStop(1, '#0a280a');
+                this.ctx.fillStyle = feltGradient;
                 this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-                // Draw column placeholders
+                // Draw column placeholders - vintage style
                 for (let col = 0; col < 10; col++) {
                     const x = this.startX + col * (this.cardWidth + this.columnSpacing);
                     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
                     this.ctx.beginPath();
                     this.roundRect(x, this.startY, this.cardWidth, this.cardHeight, CONFIG.CARD_RADIUS);
                     this.ctx.fill();
+
+                    // Subtle border
+                    this.ctx.strokeStyle = 'rgba(212, 168, 67, 0.15)';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.stroke();
                 }
 
                 // Draw stock area
